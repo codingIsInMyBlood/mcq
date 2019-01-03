@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 
+Route::get("/migrate", function(Request $request){
+	\Artisan::call('migrate');
+	return response()->json(["success"=>true]);
+});
+
 Route::middleware("studentAuth")->group(function(){
 	Route::get("refresh",function(){
 		return response()->json(["success"=>true]);

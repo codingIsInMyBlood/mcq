@@ -24,7 +24,7 @@ class AuthenticateStudent
             }
             return $next($request);
         }
-        if(!$request->hasHeader("secret"))
+        if( !$request->hasHeader("secret") || empty($request->header("secret")) )
             return response()->json(["error"=>"Bad Request"],400);
         else
             $this->decryptSecret($request->header("secret"));
@@ -43,8 +43,14 @@ class AuthenticateStudent
     }
 
     private  function invalidateSecret(){
+        // throw new CustomException("studentId".$this->studentId, 1);
+        
         DB::table($this->secretTable)->where("studentId",$this->studentId)->delete();
-        StudentReport::where("studentId",$this->studentId)->update(["status"=>-1]);
+        $sr = StudentReport::where("studentId",$this->studentId)->first();
+        if(!$sr)
+            return;
+        $sr->status = -1;
+        $sr->save();
     }
 
     

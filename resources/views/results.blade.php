@@ -3,9 +3,14 @@
 <head>
 	<title>Student Results</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style type="text/css">
+        [v-cloak]{
+            display: none;
+        }
+    </style>
 </head>
 <body>
-	<div class="container" id="app">
+	<div class="container" id="app" v-cloak>
 		<table class="table">
 			<thead>
 				<tr>
@@ -49,13 +54,8 @@
                 });
 
                 this.$http.interceptors.response.use(function (response) {
-                    let secret = "";
-                    if(typeof response.headers.secret != "undefined")
-                        secret = response.headers.secret;
-                    localStorage.setItem("secret", secret);
                     return Promise.resolve(response.data);
                   }, function (error) {
-                    // Do something with request error
                     return Promise.reject(error);
                 });
 

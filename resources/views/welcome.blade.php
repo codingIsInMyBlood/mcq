@@ -13,6 +13,7 @@
 </head>
 <body>
     <div id="app" class="container" style="padding-top: 10%;" v-cloak>
+        <center><h1>Report Card Pvt Ltd.</h1></center>
         <div v-if="loading">
             <h1>Please Wait...</h1>
         </div>
@@ -54,7 +55,7 @@
               <div class="card-footer">
                 <div style="float: right;">
                     <button @click.prevent="ansSubmit" class="btn btn-success">Submit</button>
-                    <button @click.prevent="nextQuestion" class="btn btn-primary">Next</button>
+                    <button @click.prevent="nextQuestion" class="btn btn-primary">Skip</button>
                 </div>
               </div>
             </div>
@@ -71,7 +72,7 @@
         new Vue({
             el : "#app",
             data : {
-                loading : false,
+                loading : true,
                 askName : true,
                 question : {postion:"",question:"",id:""},
                 options : [],
@@ -99,8 +100,11 @@
 
                 this.$http.interceptors.response.use(function (response) {
                     let secret = "";
+                    // console.log(response,secret);
                     if(typeof response.headers.secret != "undefined")
                         secret = response.headers.secret;
+                    console.log("secret",secret);
+                    console.log("rsecret",response.headers.secret);
                     localStorage.setItem("secret", secret);
                     return Promise.resolve(response.data);
                   }, function (error) {
@@ -110,8 +114,9 @@
 
                 // refresh
                 this.$http.get("refresh")
-                
-
+                .then((res)=>{
+                    ths.loading = false;
+                });
             },
             methods : {
                 getSecret : function(){
